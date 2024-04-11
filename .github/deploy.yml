@@ -25,6 +25,6 @@ jobs:
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages  #  如果想將應用部署到 gh-pages 分支，這裏就不需要改。
+        BRANCH: main 
         FOLDER: dist  # Vue CLI 建立的生產構建目錄
         CLEAN: true  # 清除舊文件
