@@ -1,7 +1,6 @@
 <template>
   <div id="clcok">
     <div id="container">
-      <p id="font">FONT</p>
       <div id="circle">
         <div id="hPointer" class="pointer" :style="{ transform: `rotate(${hDegree}deg)` }">
           <span class="number" :style="{ transform: `translate(-50%, 10px) rotate(${-hDegree}deg)` }">
