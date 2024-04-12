@@ -1,5 +1,5 @@
 <template>
-  <div id="container">
+  <div class="container">
     <div id="clcok">
       <div id="circle">
         <div id="hPointer" class="pointer" :style="{ transform: `rotate(${hDegree}deg)` }">
@@ -68,8 +68,7 @@ function run() {
 }
 
 #clcok {
-  width: 100vw;
-  height: 100vh;
+
   display: flex;
   justify-content: center;
   align-items: center;

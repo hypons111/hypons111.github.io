@@ -1,5 +1,5 @@
 <template>
-  <div id="container">
+  <div class="container">
     <div id="minesweeper">
       <div id="panel">
         <!-- <div class="item"><input type="number" v-model="boardScale"></div> -->
@@ -208,8 +208,6 @@ $questionMarke: white;
 $lightgray: #b0b0b0;
 $darkgray: #333333;
 
-
-
 #minesweeper {
   * {
     box-sizing: border-box;
@@ -219,8 +217,6 @@ $darkgray: #333333;
     font-weight: bold;
   }
 
-  width: 100vw;
-  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
