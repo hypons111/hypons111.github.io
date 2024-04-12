@@ -1,0 +1,30 @@
+const cell = [
+(i-scale) ,      上一格
+(i+scale) ,      下一格
+(i-1) ,          左一格
+(i+1) ,          右一格
+(i-scale-1) ,    左上一格
+(i-scale+1) ,    右上一格
+(i+scale-1) ,    左下一格
+(i+scale+1)     右下一格
+]
+
+
+if(i === 0) {                                 左上
+} else if (i === scale - 1) {                 右上
+} else if (i === Math.pow(scale, 2) - scale) {左下
+} else if (i === Math.pow(scale, 2) - 1) {    右下
+} else if(cells.value[i].row === 0) {         上
+} else if(cells.value[i].row === scale - 1) { 下
+} else if(cells.value[i].column === 0) {      左
+} else if(cells.value[i].column ===  scale - 1) {   // 右
+} else {
+  counter.top(i);
+  counter.bottom(i);
+  counter.left(i);
+  counter.right(i);
+  counter.topLeft(i);
+  counter.topRight(i);
+  counter.bottomLeft(i);
+  counter.bottomRight(i);
+}
