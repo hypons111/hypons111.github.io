@@ -1,4 +1,5 @@
-import { createRouter, createWebHistory } from 'vue-router'
+// import { createRouter, createWebHistory } from 'vue-router'    // hash mode
+import { createRouter, createWebHashHistory } from 'vue-router';   // history mode
 import HomeView from '../views/HomeView.vue'
 
 const routes = [
@@ -21,7 +22,7 @@ const routes = [
 
 const router = createRouter({
   history: createWebHashHistory(process.env.BASE_URL),  // hash mode
-  // history: createWebHistory(process.env.BASE_URL),      // history mode
+  // history: createWebHistory(process.env.BASE_URL),   // history mode
   routes
 })
 

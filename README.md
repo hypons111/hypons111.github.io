@@ -7,6 +7,9 @@
 
 除咗喺 `vue create` 嗰陣可以揀用邊個 mode 之外，仲可以喺 router/index.js 度改：
 ```
+import { createRouter, createWebHashHistory } from 'vue-router';    // hash mode
+import { createRouter, createWebHistory } from 'vue-router'         // history mode
+
 const router = createRouter({
   history: createWebHashHistory(process.env.BASE_URL),    // hash mode
   // history: createWebHistory(process.env.BASE_URL),     // history mode
