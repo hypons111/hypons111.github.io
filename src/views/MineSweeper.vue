@@ -210,7 +210,7 @@ $darkgray: #333333;
 
 
 
-#container {
+#minesweeper {
   * {
     box-sizing: border-box;
     padding: 0;
