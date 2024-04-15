@@ -2,16 +2,13 @@
   <div class="container">
     <div id="minesweeper">
       <div id="panel">
-        <!-- <div class="item"><input type="number" v-model="boardScale"></div> -->
-        <!-- <div class="item"><input type="number" v-model="mineNumber"></div> -->
-        <input id="scale" type="number" @change="initialGame">
-        <input id="mine" type="number" @change="initialGame">
-        <span>{{ timer }}</span>
-        <button>START</button>
-        <button>PAUSE</button>
-        <button>RESET</button>
+        <button class="item" @click="setGameStates(1)">NEW GAME</button>
+        <input class="item" v-model="timer">
+        <!-- <button class="item" @click="setGameStates(2)">PAUSE</button> -->
+        <button class="item" @click="setGameStates(0)">RESET</button>
       </div>
-      <div id="board">
+
+      <div id="board" v-if="gameStates.currentStatus !== 0">
         <div v-for="row in rows" :key="row">
           <span v-for="column in columns" :key="column" class="cell" :id="column + (row * boardScale)"
             :class="cells[column + (row * boardScale)].status" :data-type="cells[column + (row * boardScale)].type"
@@ -27,39 +24,71 @@
             </p>
           </span>
         </div>
+
       </div>
+
+      <div v-else id="newGameWrapper">
+        <p> Minesweeper </p>
+        <div>
+          <label for="boardScale">Size : </label>
+          <input type="number" id="boardScale" class="item" v-model="boardScale">
+        </div>
+        <div>
+          <label for="mineNumber">Mine : </label>
+          <input type="number" id="mineNumber" class="item" v-model="mineNumber">
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, onBeforeMount, onMounted, ref } from "vue"
+import { computed, ref } from "vue";
 const boardScale = ref(9);
-const mineNumber = ref(10);
+const mineNumber = ref(1);
 const rows = computed(() => Array.from({ length: boardScale.value }, (_, i) => i));
 const columns = computed(() => Array.from({ length: boardScale.value }, (_, i) => i));
 const cells = ref([]);
-const timer = "00:00";
-
-onBeforeMount(() => {
-  setCells();
-  setMines();
-  setMineCounter();
+const timer = ref("00:00:00");
+const gameStates = ref({
+  currentStatus : 0,
+  // status: {
+  //   0: "none",
+  //   1: "start",
+  //   2: "pause",
+  //   3: "win",
+  //   4: "lost"
+  // }
 })
 
-function initialGame(event) {
-  console.log(event.target.id)
-
-  if(event.target.id === "scale") {
-    boardScale.value = event.target.value;
-    setCells();
-    setMines();
-    setMineCounter();
+// 控制遊戲狀態
+function setGameStates(statusCode) {
+  gameStates.value.currentStatus = statusCode;
+  switch (statusCode) {
+    case 0:
+      break;
+    case 1:
+      setCells();
+      setMines();
+      setMineCounter();
+      setTimer();
+      break;
+    case 2:
+      break;
+    case 3:
+    alert("WIN");
+      break;
+    case 4:
+    alert("Lose");
+      digAllCells();
+      break;
   }
 }
 
 // 初始化每個 cell
 function setCells() {
+  cells.value = [];
   for (let i = 0; i < boardScale.value; i++) {
     for (let j = 0; j < boardScale.value; j++) {
       cells.value.push({
@@ -84,13 +113,17 @@ function setMines() {
   }
 }
 
+function setTimer() {}
+
 // 設定地雷周圍 8 格的數字
 function setMineCounter() {
   // neighborIds 是地雷周圍 8 格的 cell id, 執行一次就將他們的 mineCounter 數 + 1.
   const counterHandler = function (neighborIds) {
     neighborIds.forEach(id => {
-      cells.value[id].type = "counter";
-      cells.value[id].mineCounter++;
+      if (cells.value[id].type !== "mine") {
+        cells.value[id].type = "counter";
+        cells.value[id].mineCounter++;
+      }
     })
   }
   // 如果是地雷就遍歷周圍 8 格, 並執行 counterHandler().
@@ -101,11 +134,9 @@ function setMineCounter() {
   }
 }
 
-function leftClick() {
+// 打開 cell
+function leftClick(event) {
   let target = cells.value[event.target.id];
-  if (event.target.tagName === "P") {
-    target = cells.value[event.target.parentElement.id];
-  }
   target.status = target.type;
   switch (target.type) {
     case "empty":
@@ -114,7 +145,27 @@ function leftClick() {
     case "counter":
       break;
     case "mine":
-      dugMine();
+      setGameStates(4);
+      break;
+  }
+}
+
+// 標註旗子 / 問號
+function rightClick(event) {
+  let t = event.target;
+  while (!t.id) {
+    t = t.parentElement;
+  }
+  switch (cells.value[t.id].status) {
+    case "initial":
+      cells.value[t.id].status = "flagged";
+      checkWin();
+      break;
+    case "flagged":
+      cells.value[t.id].status = "questionMarked";
+      break;
+    case "questionMarked":
+      cells.value[t.id].status = "initial";
       break;
   }
 }
@@ -137,32 +188,21 @@ function dugEmpty(id) {
   relatedCellTraversal(id, checkCellType);
 }
 
-// 掘到 mine 時
-function dugMine() {
+// 檢查是不是破關 
+// 破關條件：全部地雷都被標註旗子 和 旗子數量等於地雷數量
+function checkWin() {
+  const result = cells.value.filter(cell => cell.type === "mine" && cell.status === "flagged");
+  if (result.length === mineNumber.value) {
+    setGameStates(3);
+  }
+}
+
+// 打開全部 cells
+function digAllCells() {
   cells.value.forEach(cell => {
     cell.status = cell.type;
   })
 }
-
-
-function rightClick(event) {
-  let t = event.target;
-  while (!t.id) {
-    t = t.parentElement;
-  }
-  switch (cells.value[t.id].status) {
-    case "initial":
-      cells.value[t.id].status = "flagged";
-      break;
-    case "flagged":
-      cells.value[t.id].status = "questionMarked";
-      break;
-    case "questionMarked":
-      cells.value[t.id].status = "initial";
-      break;
-  }
-}
-
 
 // 遍歷某一格 cell 的周圍 8 格, 並對其執行 func. 
 // func 統一宣告在呼叫 relatedCellTraversal() 的函數中.
@@ -201,7 +241,7 @@ function relatedCellTraversal(id, func) {
 </script>
 
 <style lang="scss">
-$text: lightseagreen;
+$text: Blue;
 $flag: gold;
 $mine: red;
 $questionMarke: white;
@@ -209,29 +249,49 @@ $lightgray: #b0b0b0;
 $darkgray: #333333;
 
 #minesweeper {
-  * {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: bold;
-  }
-
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 
   #panel {
-
+    width: 30em;
     display: flex;
-
-    &>* {
-      flex: 1 1 2em;
-    }
-    input {
-      width: 2em;
+    justify-content: center;
+    // border: 0.5em solid $darkgray;
+    margin-bottom: 1em;
+    
+    .item {
       text-align: center;
+      width: 20%;
+    }
+  }
+  
+  #newGameWrapper {
+    width: 30em;
+    height: 30em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: $lightgray;
+    border: 1px solid $darkgray;
+
+    > div {
+      width: 20em;
+      display: flex;
+      justify-content: center;
+      margin-top: 0.5em;
+
+      input {
+        width: 3em;
+        margin-left: 1em;
+      }
+    }
+
+    p {
+      font-size: 1.5em;
+      font-weight: bolder;
     }
   }
 
@@ -246,8 +306,8 @@ $darkgray: #333333;
 
       // cell 基本樣式
       .cell {
-        width: 3em;
-        height: 3em;
+        width: 2em;
+        height: 2em;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -280,6 +340,8 @@ $darkgray: #333333;
 
       /* 已開的 counter */
       .counter {
+        font-weight: bolder;
+        color: $text;
         background-color: white;
       }
 

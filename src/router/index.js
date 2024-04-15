@@ -16,7 +16,7 @@ const routes = [
   {
     path: '/minesweeper',
     name: 'minesweeper',
-    component: () => import('../views/MineSweeper.vue')
+    component: () => import('../views/Minesweeper.vue')
   }
 ]
 

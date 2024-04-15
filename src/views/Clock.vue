@@ -62,17 +62,13 @@ function run() {
 </script>
 
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-}
+
 
 #clcok {
-
   display: flex;
   justify-content: center;
   align-items: center;
-
+  
   #circle {
     position: relative;
     width: 15em;

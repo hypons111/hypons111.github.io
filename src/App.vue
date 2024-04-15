@@ -2,12 +2,19 @@
   <nav>
     <router-link to="/">Home</router-link> |
     <router-link to="/clock">Clock</router-link> |
-    <router-link to="/minesweeper">Mine Sweeper</router-link>
+    <router-link to="/minesweeper">Minesweeper</router-link>
   </nav>
   <router-view/>
 </template>
 
 <style lang="scss">
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: 'Courier New', Courier, monospace;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
