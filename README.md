@@ -49,4 +49,4 @@ popState 事件
 通過結合使用 pushState、replaceState 以及監聽 popState 事件，開發者可以創建出既能動態響應 URL 變化又無需頁面重新加載的單頁面應用（SPA）。這樣的用戶體驗更接近於傳統的多頁面應用，同時又保持了 SPA 的快速響應和不重新加載的優點。
 
 ## 2024-04-27
-公司 Node.js 太舊，deploy 失敗。而家喺屋企再 push 一次。 
+公司 Node.js 太舊，deploy 失敗。而家用 '20.6.0' 再 push 一次。 
